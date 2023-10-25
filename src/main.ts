@@ -24,8 +24,6 @@ class Words {
       word.update()
     }); 
   }
-
-
 }
 
 class Word {
@@ -49,8 +47,24 @@ class Word {
   }
 }
 
-const words = new Words()
+let words = new Words()
 words.addWord()
+
+//Timer to spawn words
+let wordTimer = 2
+function decreaseTimer(): void {
+  if (wordTimer > 0) {
+    setTimeout(decreaseTimer, 2000)
+    wordTimer--;
+  } else {
+    wordTimer = 2;
+    decreaseTimer();
+    words.addWord();
+  }
+}
+
+//Initialize  timer
+decreaseTimer();
 
 //Game loop
 function animate(): void {
@@ -58,6 +72,8 @@ function animate(): void {
   // Clear the canvas so drawings dont smear
   c.fillStyle='black'
   c.fillRect(0,0, canvas.width, canvas.height)
+
+  //Spawn and move words across the screen
   words.update();
 }
 
