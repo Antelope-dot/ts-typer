@@ -6,7 +6,27 @@ canvas.height = 576;
 
 c.fillRect(0,0, canvas.width, canvas.height);
 
-const word_speed: number = 0.2;
+const wordSpeed: number = 0.2;
+
+class Words {
+  words: Word[];
+
+  constructor() {
+    this.words = [];
+  }
+
+  addWord(): void {
+    this.words.push(new Word({x: 0, y: Math.floor(Math.random() * canvas.height)}, "Test"))
+  }
+
+  update(): void {
+    this.words.forEach((word) => {
+      word.update()
+    }); 
+  }
+
+
+}
 
 class Word {
   position: any;
@@ -25,14 +45,12 @@ class Word {
 
   update(): void {
     this.draw();
-    this.position.x += word_speed;
+    this.position.x += wordSpeed;
   }
 }
 
-const word = new Word(
-  {x: 0, y: 100}, 
-  "Test"
-)
+const words = new Words()
+words.addWord()
 
 //Game loop
 function animate(): void {
@@ -40,7 +58,7 @@ function animate(): void {
   // Clear the canvas so drawings dont smear
   c.fillStyle='black'
   c.fillRect(0,0, canvas.width, canvas.height)
-  word.update();
+  words.update();
 }
 
 animate();
