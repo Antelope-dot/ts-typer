@@ -36,7 +36,15 @@ class Word {
   }
 
   draw(): void {
-    c.fillStyle = 'white';
+    var color: string;
+    if (this.position.x > canvas.width*(2/3)){
+      color = "red"
+    } else if (this.position.x > canvas.width*(1/3)) {
+      color = "yellow"
+    } else {
+      color = "white"
+    }
+    c.fillStyle = color;
     c.font = "24px serif";
     c.fillText(this.word, this.position.x, this.position.y)
   }
@@ -78,3 +86,17 @@ function animate(): void {
 }
 
 animate();
+
+// Text input that checks if text matches with existing words on screen
+let typer = document.querySelector('input')!;
+typer.addEventListener('input', () => {
+  //For loop through words on screen
+  for ( var i = 0; i <= words.words.length; i++) {
+    // Check if word matches input 
+    if (words.words[i].word == typer.value) {
+      // Remove word and clear input
+      words.words.splice(i, 1);
+      typer.value = "";
+    }
+  }
+}); 
