@@ -74,12 +74,49 @@ function decreaseTimer(): void {
 //Initialize  timer
 decreaseTimer();
 
+const COLOR_STARS = "white";
+const STAR_NUM = 200;
+const STAR_SIZE = 0.005;
+const STAR_SPEED = 0.05;
+
+var stars: any = [];
+var starSpeed = STAR_SPEED * canvas.width;
+var xv = starSpeed * Math.random();
+
+for (let i = 0; i < STAR_NUM; i++) {
+  let speedMult = Math.random() * 1.5 + 0.5;
+  stars[i] = {
+    r: Math.random() * STAR_SIZE * canvas.width /2,
+    x: Math.floor(Math.random() * canvas.width),
+    y: Math.floor(Math.random() * canvas.height),
+    xv: xv * speedMult
+  }
+}
+
 //Game loop
 function animate(): void {
   window.requestAnimationFrame(animate)
   // Clear the canvas so drawings dont smear
   c.fillStyle='black'
   c.fillRect(0,0, canvas.width, canvas.height)
+
+  // Draw stars so background looks cool
+  c.fillStyle = COLOR_STARS;
+  for (let i = 0; i < STAR_NUM; i++) {
+    c.beginPath();
+    //Arc draws a circle.
+    c.arc(stars[i].x, stars[i].y, stars[i].r,0,Math.PI*2);
+    c.fill();
+
+    //Make the stars move and if they reach end of screen then loop back around
+    stars[i].x += stars[i].xv * 0.009;
+
+    if (stars[i].x < 0 - stars[i].r) {
+      stars[i].x = canvas.width + stars[i].r;
+    } else if (stars[i].x > canvas.width + stars[i].r) {
+      stars[i].x = 0 - stars[i].r;
+    }
+  }
 
   //Spawn and move words across the screen
   words.update();
@@ -93,7 +130,7 @@ typer.addEventListener('input', () => {
   //For loop through words on screen
   for ( var i = 0; i <= words.words.length; i++) {
     // Check if word matches input 
-    if (words.words[i].word == typer.value) {
+    if (words.words[i].word.toLowerCase() === typer.value.toLowerCase()) {
       // Remove word and clear input
       words.words.splice(i, 1);
       typer.value = "";

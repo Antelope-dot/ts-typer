@@ -1,3 +1,17 @@
 body {
   background-color: coral;
 }
+
+.game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#typer{
+  height:50px;
+  font-size:16pt;
+}
