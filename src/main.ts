@@ -74,6 +74,7 @@ function decreaseTimer(): void {
 //Initialize  timer
 decreaseTimer();
 
+//Stars for background
 const COLOR_STARS = "white";
 const STAR_NUM = 200;
 const STAR_SIZE = 0.005;
@@ -128,7 +129,7 @@ animate();
 let typer = document.querySelector('input')!;
 typer.addEventListener('input', () => {
   //For loop through words on screen
-  for ( var i = 0; i <= words.words.length; i++) {
+  for ( var i = 0; i <= words.words.length-1; i++) {
     // Check if word matches input 
     if (words.words[i].word.toLowerCase() === typer.value.toLowerCase()) {
       // Remove word and clear input
