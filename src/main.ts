@@ -6,9 +6,14 @@ canvas.height = 576;
 
 c.fillRect(0,0, canvas.width, canvas.height);
 
-var wordSpeed: number = 0.2;
-var eliminations: number = 0;
-var missed: number = 0;
+//Movement speed of words. Get progessivly faster
+let wordSpeed: number = 0.2;
+
+//Score counter for words destoyed and missed
+let eliminations: number = 0;
+let missed: number = 0;
+
+let gameStart: boolean = false;
 
 class Words {
   words: Word[];
@@ -23,11 +28,12 @@ class Words {
 
   update(): void {
     for ( var i = 0; i <= words.words.length-1; i++) {
-      words.words[i].update()
-      if (words.words[i].position.x > canvas.width) {
-        missed += 1;
-        words.words.splice(i, 1);
-        console.log("Missed")
+      if (gameStart) {
+        words.words[i].update()
+        if (words.words[i].position.x > canvas.width) {
+          missed += 1;
+          words.words.splice(i, 1);
+        }
       }
     } 
   }
@@ -64,19 +70,20 @@ class Word {
 }
 
 let words = new Words()
-words.addWord()
 
 //Timer to spawn words
 let wordTimer = 1
 function decreaseTimer(): void {
   if (wordTimer > 0) {
-    setTimeout(decreaseTimer, 1000)
-    wordTimer--;
+      wordTimer--;
+      setTimeout(decreaseTimer, 1000)
+  } else if (gameStart) {
+      wordTimer = 1;
+      wordSpeed += 0.01;
+      decreaseTimer();
+      words.addWord();
   } else {
-    wordTimer = 1;
-    wordSpeed += 0.01;
-    decreaseTimer();
-    words.addWord();
+      setTimeout(decreaseTimer, 1000)
   }
 }
 
@@ -127,9 +134,15 @@ function animate(): void {
       stars[i].x = 0 - stars[i].r;
     }
   }
+  if (gameStart) {
+    //Spawn and move words across the screen
+    words.update();
+  } else {
+    c.font = "50px serif";
+    c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2 );
+  }
 
-  //Spawn and move words across the screen
-  words.update();
+
 }
 
 animate();
@@ -138,14 +151,20 @@ animate();
 let typer = document.querySelector('input')!;
 typer.addEventListener('input', () => {
   //For loop through words on screen
-  for ( var i = 0; i <= words.words.length-1; i++) {
-    // Check if word matches input 
-    if (words.words[i].word.toLowerCase() === typer.value.toLowerCase()) {
-      // Remove word and clear input
-      words.words.splice(i, 1);
-      eliminations += 1;
-      console.log("eliminated")
-      typer.value = "";
+  if (!gameStart && typer.value == "start") {
+        typer.value = "";
+        words.addWord()
+        gameStart = true;  
+  } else {
+    for ( var i = 0; i <= words.words.length-1; i++) {
+      // Check if word matches input 
+      let wordsMatch: boolean = words.words[i].word === typer.value
+      if (wordsMatch) {
+        // Remove word and clear input
+        words.words.splice(i, 1);
+        eliminations += 1;
+        typer.value = "";
+      }
     }
   }
 }); 
