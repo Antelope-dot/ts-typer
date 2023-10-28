@@ -1,5 +1,5 @@
 body {
-  background-color: coral;
+  background-color: black;
 }
 
 .game {
@@ -14,4 +14,31 @@ body {
 #typer{
   height:50px;
   font-size:16pt;
+}
+
+label {
+  color: white;
+  font-size: 48px;
+}
+
+p {
+  color: white;
+  font-size: 48px;
+}
+
+#gameInputs {
+  display: flex;
+  align-items:center;
+}
+
+.input{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 4rem;
+  margin-right: 4rem;
+}
+
+.value {
+  margin-left: 1rem;
 }

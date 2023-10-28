@@ -4,13 +4,13 @@ const c = canvas.getContext('2d')!;
 canvas.width = 1024;
 canvas.height = 576;
 
-c.fillRect(0,0, canvas.width, canvas.height);
+c.fillRect(0, 0, canvas.width, canvas.height);
 
 //Movement speed of words. Get progessivly faster
 let wordSpeed: number = 0.2;
 
 //Score counter for words destoyed and missed
-let eliminations: number = 0;
+let score: number = 0;
 let missed: number = 0;
 
 let gameStart: boolean = false;
@@ -23,19 +23,20 @@ class Words {
   }
 
   addWord(): void {
-    this.words.push(new Word({x: 0, y: Math.floor(Math.random() * canvas.height)}, "test"))
+    this.words.push(new Word({ x: 0, y: Math.floor(Math.random() * canvas.height) }, "test"))
   }
 
   update(): void {
-    for ( var i = 0; i <= words.words.length-1; i++) {
+    for (var i = 0; i <= words.words.length - 1; i++) {
       if (gameStart) {
         words.words[i].update()
         if (words.words[i].position.x > canvas.width) {
           missed += 1;
+          document.getElementById("missedValue")!.innerHTML = missed.toString();
           words.words.splice(i, 1);
         }
       }
-    } 
+    }
   }
 
 }
@@ -51,9 +52,9 @@ class Word {
 
   draw(): void {
     var color: string;
-    if (this.position.x > canvas.width*(2/3)){
+    if (this.position.x > canvas.width * (2 / 3)) {
       color = "red"
-    } else if (this.position.x > canvas.width*(1/3)) {
+    } else if (this.position.x > canvas.width * (1 / 3)) {
       color = "yellow"
     } else {
       color = "white"
@@ -75,15 +76,15 @@ let words = new Words()
 let wordTimer = 1
 function decreaseTimer(): void {
   if (wordTimer > 0) {
-      wordTimer--;
-      setTimeout(decreaseTimer, 1000)
+    wordTimer--;
+    setTimeout(decreaseTimer, 1000)
   } else if (gameStart) {
-      wordTimer = 1;
-      wordSpeed += 0.01;
-      decreaseTimer();
-      words.addWord();
+    wordTimer = 1;
+    wordSpeed += 0.01;
+    decreaseTimer();
+    words.addWord();
   } else {
-      setTimeout(decreaseTimer, 1000)
+    setTimeout(decreaseTimer, 1000)
   }
 }
 
@@ -103,7 +104,7 @@ var xv = starSpeed * Math.random();
 for (let i = 0; i < STAR_NUM; i++) {
   let speedMult = Math.random() * 1.5 + 0.5;
   stars[i] = {
-    r: Math.random() * STAR_SIZE * canvas.width /2,
+    r: Math.random() * STAR_SIZE * canvas.width / 2,
     x: Math.floor(Math.random() * canvas.width),
     y: Math.floor(Math.random() * canvas.height),
     xv: xv * speedMult
@@ -114,15 +115,15 @@ for (let i = 0; i < STAR_NUM; i++) {
 function animate(): void {
   window.requestAnimationFrame(animate)
   // Clear the canvas so drawings dont smear
-  c.fillStyle='black'
-  c.fillRect(0,0, canvas.width, canvas.height)
+  c.fillStyle = 'black'
+  c.fillRect(0, 0, canvas.width, canvas.height)
 
   // Draw stars so background looks cool
   c.fillStyle = COLOR_STARS;
   for (let i = 0; i < STAR_NUM; i++) {
     c.beginPath();
     //Arc draws a circle.
-    c.arc(stars[i].x, stars[i].y, stars[i].r,0,Math.PI*2);
+    c.arc(stars[i].x, stars[i].y, stars[i].r, 0, Math.PI * 2);
     c.fill();
 
     //Make the stars move and if they reach end of screen then loop back around
@@ -139,7 +140,7 @@ function animate(): void {
     words.update();
   } else {
     c.font = "50px serif";
-    c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2 );
+    c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2);
   }
 
 
@@ -152,17 +153,18 @@ let typer = document.querySelector('input')!;
 typer.addEventListener('input', () => {
   //For loop through words on screen
   if (!gameStart && typer.value == "start") {
-        typer.value = "";
-        words.addWord()
-        gameStart = true;  
+    typer.value = "";
+    words.addWord()
+    gameStart = true;
   } else {
-    for ( var i = 0; i <= words.words.length-1; i++) {
+    for (var i = 0; i <= words.words.length - 1; i++) {
       // Check if word matches input 
       let wordsMatch: boolean = words.words[i].word === typer.value
       if (wordsMatch) {
         // Remove word and clear input
         words.words.splice(i, 1);
-        eliminations += 1;
+        score += 1;
+        document.getElementById("scoreValue")!.innerHTML = score.toString();
         typer.value = "";
       }
     }
