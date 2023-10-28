@@ -6,7 +6,9 @@ canvas.height = 576;
 
 c.fillRect(0,0, canvas.width, canvas.height);
 
-const wordSpeed: number = 0.2;
+var wordSpeed: number = 0.2;
+var eliminations: number = 0;
+var missed: number = 0;
 
 class Words {
   words: Word[];
@@ -16,14 +18,20 @@ class Words {
   }
 
   addWord(): void {
-    this.words.push(new Word({x: 0, y: Math.floor(Math.random() * canvas.height)}, "Test"))
+    this.words.push(new Word({x: 0, y: Math.floor(Math.random() * canvas.height)}, "test"))
   }
 
   update(): void {
-    this.words.forEach((word) => {
-      word.update()
-    }); 
+    for ( var i = 0; i <= words.words.length-1; i++) {
+      words.words[i].update()
+      if (words.words[i].position.x > canvas.width) {
+        missed += 1;
+        words.words.splice(i, 1);
+        console.log("Missed")
+      }
+    } 
   }
+
 }
 
 class Word {
@@ -59,13 +67,14 @@ let words = new Words()
 words.addWord()
 
 //Timer to spawn words
-let wordTimer = 2
+let wordTimer = 1
 function decreaseTimer(): void {
   if (wordTimer > 0) {
-    setTimeout(decreaseTimer, 2000)
+    setTimeout(decreaseTimer, 1000)
     wordTimer--;
   } else {
-    wordTimer = 2;
+    wordTimer = 1;
+    wordSpeed += 0.01;
     decreaseTimer();
     words.addWord();
   }
@@ -76,7 +85,7 @@ decreaseTimer();
 
 //Stars for background
 const COLOR_STARS = "white";
-const STAR_NUM = 200;
+const STAR_NUM = 100;
 const STAR_SIZE = 0.005;
 const STAR_SPEED = 0.05;
 
@@ -134,6 +143,8 @@ typer.addEventListener('input', () => {
     if (words.words[i].word.toLowerCase() === typer.value.toLowerCase()) {
       // Remove word and clear input
       words.words.splice(i, 1);
+      eliminations += 1;
+      console.log("eliminated")
       typer.value = "";
     }
   }
