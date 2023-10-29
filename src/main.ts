@@ -13,15 +13,13 @@ let wordSpeed: number = 0.2;
 let score: number = 0;
 let missed: number = 0;
 
-enum gameState{
+enum gameState {
   Start,
   Playing,
   End,
 }
 
 let state = gameState.Start;
-
-// let gameStart: boolean = false;
 
 class Words {
   words: Word[];
@@ -42,6 +40,9 @@ class Words {
           missed += 1;
           document.getElementById("missedValue")!.innerHTML = missed.toString();
           words.words.splice(i, 1);
+          if (missed >= 10) {
+            state = gameState.End
+          }
         }
       }
     }
@@ -146,6 +147,10 @@ function animate(): void {
   if (state == gameState.Playing) {
     //Spawn and move words across the screen
     words.update();
+  } else if (state == gameState.End) {
+    c.font = "50px serif";
+    c.fillText("You got a score of: " + score, canvas.width / 2 - 150, canvas.height / 2)
+    c.fillText("Type retry to play again", canvas.width / 2 - 175, canvas.height / 2 + 100)
   } else {
     c.font = "50px serif";
     c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2);
@@ -163,6 +168,18 @@ typer.addEventListener('input', () => {
   if (state == gameState.Start && typer.value == "start") {
     typer.value = "";
     words.addWord()
+    state = gameState.Playing;
+  } else if (state == gameState.End && typer.value == "retry") {
+
+    // TODO: This all should be a function
+    typer.value = "";
+    words.words = [];
+    missed = 0;
+    score = 0;
+
+    document.getElementById("missedValue")!.innerHTML = "0";
+    document.getElementById("scoreValue")!.innerHTML = "0";
+
     state = gameState.Playing;
   } else {
     for (var i = 0; i <= words.words.length - 1; i++) {
