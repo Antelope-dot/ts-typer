@@ -13,7 +13,15 @@ let wordSpeed: number = 0.2;
 let score: number = 0;
 let missed: number = 0;
 
-let gameStart: boolean = false;
+enum gameState{
+  Start,
+  Playing,
+  End,
+}
+
+let state = gameState.Start;
+
+// let gameStart: boolean = false;
 
 class Words {
   words: Word[];
@@ -28,7 +36,7 @@ class Words {
 
   update(): void {
     for (var i = 0; i <= words.words.length - 1; i++) {
-      if (gameStart) {
+      if (state == gameState.Playing) {
         words.words[i].update()
         if (words.words[i].position.x > canvas.width) {
           missed += 1;
@@ -78,7 +86,7 @@ function decreaseTimer(): void {
   if (wordTimer > 0) {
     wordTimer--;
     setTimeout(decreaseTimer, 1000)
-  } else if (gameStart) {
+  } else if (state == gameState.Playing) {
     wordTimer = 1;
     wordSpeed += 0.01;
     decreaseTimer();
@@ -135,7 +143,7 @@ function animate(): void {
       stars[i].x = 0 - stars[i].r;
     }
   }
-  if (gameStart) {
+  if (state == gameState.Playing) {
     //Spawn and move words across the screen
     words.update();
   } else {
@@ -152,10 +160,10 @@ animate();
 let typer = document.querySelector('input')!;
 typer.addEventListener('input', () => {
   //For loop through words on screen
-  if (!gameStart && typer.value == "start") {
+  if (state == gameState.Start && typer.value == "start") {
     typer.value = "";
     words.addWord()
-    gameStart = true;
+    state = gameState.Playing;
   } else {
     for (var i = 0; i <= words.words.length - 1; i++) {
       // Check if word matches input 
