@@ -1,3 +1,5 @@
+import {generate} from "random-words";
+
 const canvas = document.querySelector('canvas')!;
 const c = canvas.getContext('2d')!;
 
@@ -24,7 +26,6 @@ enum gameState {
 
 let state = gameState.Start;
 
-
 class Words {
   words: Word[];
 
@@ -33,7 +34,7 @@ class Words {
   }
 
   addWord(): void {
-    this.words.push(new Word({ x: 0, y: this.getRandomY(15, canvas.height) }, "test"))
+    this.words.push(new Word({ x: 0, y: this.getRandomY(15, canvas.height) }, generate().toString()))
   }
 
   getRandomY(min: number, max: number): number {
@@ -179,8 +180,6 @@ function animate(): void {
     c.font = "50px serif";
     c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2);
   }
-
-
 }
 
 animate();
