@@ -13,6 +13,9 @@ let wordSpeed: number = 0.2;
 let score: number = 0;
 let missed: number = 0;
 
+// Flag if new score is higher than previous
+let newHighScore: boolean = false;
+
 enum gameState {
   Start,
   Playing,
@@ -20,6 +23,7 @@ enum gameState {
 }
 
 let state = gameState.Start;
+
 
 class Words {
   words: Word[];
@@ -41,6 +45,12 @@ class Words {
           document.getElementById("missedValue")!.innerHTML = missed.toString();
           words.words.splice(i, 1);
           if (missed >= 10) {
+            // return localStorage high score or 0 if none
+            let highScore = Number(localStorage.getItem('highScore')) || 0;
+            if (highScore < score) {
+              newHighScore = true
+              localStorage.setItem('highScore', score.toString());
+            }
             state = gameState.End
           }
         }
@@ -148,9 +158,15 @@ function animate(): void {
     //Spawn and move words across the screen
     words.update();
   } else if (state == gameState.End) {
+    c.font = "75px serif";
+    if (newHighScore) {
+      c.fillText("New highscore: " + score, canvas.width / 2 - 250, canvas.height / 2)
+    } else {
+      c.fillText("You got a score of: " + score, canvas.width / 2 - 250, canvas.height / 2 - 100)
+      c.fillText("Your personal best is: " + localStorage.getItem('highScore'), canvas.width / 2 - 300, canvas.height / 2)
+    }
     c.font = "50px serif";
-    c.fillText("You got a score of: " + score, canvas.width / 2 - 150, canvas.height / 2)
-    c.fillText("Type retry to play again", canvas.width / 2 - 175, canvas.height / 2 + 100)
+    c.fillText("Type retry to play again", canvas.width / 2 - 200, canvas.height / 2 + 100)
   } else {
     c.font = "50px serif";
     c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2);
@@ -176,6 +192,9 @@ typer.addEventListener('input', () => {
     words.words = [];
     missed = 0;
     score = 0;
+    newHighScore = false;
+    wordSpeed = 0.2;
+
 
     document.getElementById("missedValue")!.innerHTML = "0";
     document.getElementById("scoreValue")!.innerHTML = "0";
