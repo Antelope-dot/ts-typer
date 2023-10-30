@@ -33,7 +33,13 @@ class Words {
   }
 
   addWord(): void {
-    this.words.push(new Word({ x: 0, y: Math.floor(Math.random() * canvas.height) }, "test"))
+    this.words.push(new Word({ x: 0, y: this.getRandomY(15, canvas.height) }, "test"))
+  }
+
+  getRandomY(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
   }
 
   update(): void {
@@ -159,11 +165,13 @@ function animate(): void {
     words.update();
   } else if (state == gameState.End) {
     c.font = "75px serif";
-    if (newHighScore) {
+    let prevHighScore = localStorage.getItem('highScore');
+    console.log(prevHighScore);
+    if (newHighScore || prevHighScore === null) {
       c.fillText("New highscore: " + score, canvas.width / 2 - 250, canvas.height / 2)
     } else {
       c.fillText("You got a score of: " + score, canvas.width / 2 - 250, canvas.height / 2 - 100)
-      c.fillText("Your personal best is: " + localStorage.getItem('highScore'), canvas.width / 2 - 300, canvas.height / 2)
+      c.fillText("Your personal best is: " + prevHighScore, canvas.width / 2 - 300, canvas.height / 2)
     }
     c.font = "50px serif";
     c.fillText("Type retry to play again", canvas.width / 2 - 200, canvas.height / 2 + 100)
@@ -194,7 +202,6 @@ typer.addEventListener('input', () => {
     score = 0;
     newHighScore = false;
     wordSpeed = 0.2;
-
 
     document.getElementById("missedValue")!.innerHTML = "0";
     document.getElementById("scoreValue")!.innerHTML = "0";
