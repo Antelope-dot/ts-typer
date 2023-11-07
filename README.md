@@ -3,7 +3,7 @@
 
 Project inspired by this video: https://www.youtube.com/watch?v=jnkOcAkLkBU
 
-Made with typescript and html canvas. Playable on the web.
+Made with typescript and html canvas. Playable on the web here: [https://antelope-dot.github.io/ts-typer/](https://antelope-dot.github.io/ts-typer/)
 
 ## Features
 - Randomly spawning english words.
