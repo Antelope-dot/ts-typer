@@ -11,6 +11,6 @@ Made with typescript and html canvas. Playable on the web here: [https://antelop
 - Deployed on the web using Github Actions
 
 ## TODO
-- Refactore code.
+- Refactor code.
 - Randomly spawning finnish words.
 - Some bugfixes like words overlapping
