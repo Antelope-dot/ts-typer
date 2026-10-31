@@ -86,7 +86,8 @@ class Word {
       color = "white"
     }
     c.fillStyle = color;
-    c.font = "24px serif";
+    c.font = "16px 'Press Start 2P'";
+    c.textAlign = "left";
     c.fillText(this.word, this.position.x, this.position.y)
   }
 
@@ -165,20 +166,22 @@ function animate(): void {
     //Spawn and move words across the screen
     words.update();
   } else if (state == gameState.End) {
-    c.font = "75px serif";
+    c.font = "32px 'Press Start 2P'";
+    c.textAlign = "center";
     let prevHighScore = localStorage.getItem('highScore');
     console.log(prevHighScore);
     if (newHighScore || prevHighScore === null) {
-      c.fillText("New highscore: " + score, canvas.width / 2 - 250, canvas.height / 2)
+      c.fillText("New highscore: " + score, canvas.width / 2, canvas.height / 2)
     } else {
-      c.fillText("You got a score of: " + score, canvas.width / 2 - 250, canvas.height / 2 - 100)
-      c.fillText("Your personal best is: " + prevHighScore, canvas.width / 2 - 300, canvas.height / 2)
+      c.fillText("You got a score of: " + score, canvas.width / 2, canvas.height / 2 - 100)
+      c.fillText("Your personal best is: " + prevHighScore, canvas.width / 2, canvas.height / 2)
     }
-    c.font = "50px serif";
-    c.fillText("Type retry to play again", canvas.width / 2 - 200, canvas.height / 2 + 100)
+    c.font = "20px 'Press Start 2P'";
+    c.fillText("Type retry to play again", canvas.width / 2, canvas.height / 2 + 100)
   } else {
-    c.font = "50px serif";
-    c.fillText(" Type start to play", canvas.width / 2 - 150, canvas.height / 2);
+    c.font = "28px 'Press Start 2P'";
+    c.textAlign = "center";
+    c.fillText("Type start to play", canvas.width / 2, canvas.height / 2);
   }
 }
 
